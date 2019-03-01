@@ -7,13 +7,17 @@
 #
 # Hazen 2/09
 #
-
-import lib.RS232 as RS232
+import traceback
+#import lib.RS232 as RS232
 
 ## powerMeter
 #
 # Encapsulates RS-232 based communication with a Thorlabs power meter.
 #
+
+import serial.RS232 as RS232
+
+
 class powerMeter(RS232.RS232):
 
     ## __init__
@@ -22,11 +26,43 @@ class powerMeter(RS232.RS232):
     # @param timeout (Optional) the default is none.
     # @param baudrate (Optional) the default is 57600.
     #
-    def __init__(self, port = "COM1", timeout = None, baudrate = 57600):
-        RS232.RS232.__init__(self, port, timeout, baudrate, "\r\n", 0.1)
-        test = self.commWithResp("*IDN?")
-        assert test, "Power meter is not connected? Not set to " + str(baudrate) + " baudrate?"
+    # def __init__(self, port = "COM1", timeout = None, baudrate = 57600):
+        # RS232.RS232.__init__(self, port, timeout, baudrate, "\r\n", 0.1)
+        # test = self.commWithResp("*IDN?")
+        # assert test, "Power meter is not connected? Not set to " + str(baudrate) + " baudrate?"
+    def __init__(self, **kwds):
+        """
+        Connect to the laser by RS-232 and verify that the connection has been made.
+        """
+        # Add Stradus RS232 default settings.
+        kwds["baudrate"] = 57600
+        kwds["end_of_line"] = "\r"
+        kwds["wait_time"] = 0.05
 
+        self.on = False
+        self.pmin = 0.0
+        self.pmax = 5.0
+
+        try:
+            # open port
+            super().__init__(**kwds)
+
+            # see if the laser is connected
+            assert not(self.commWithResp("?HID") == None)
+
+        # FIXME: This should not catch everything!
+        except Exception:
+            print(traceback.format_exc())
+            self.live = False
+            print("Failed to connect to Stradus Laser at port", kwds["port"])
+            print("Perhaps it is turned off or the COM ports have")
+            print("been scrambled?")
+            
+        if self.live:
+            [self.pmin, self.pmax] = self.getPowerRange()
+            self.setExtControl(0)
+            if (not self.getLaserOnOff()):
+                self.setLaserOnOff(True)
     ## id
     #
     # @return The power meter id.

@@ -1,0 +1,4 @@
+Wavelength = 460nm
+Peak intensity :8.91mW
+At amplitude :6567.0
+Gain = 255

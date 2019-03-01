@@ -439,9 +439,14 @@ def setDigitalLine(source, value):
 
 if (__name__ == "__main__"):
 
-    if True:
-        di = DigitalInput(source = "Dev1/port0/line0")
-        print(di.input())
+    ao = AnalogOutput(source = "Dev1/ao20", min_val = 0.0, max_val = 1.2)
+
+    for i in range(0, 10):
+        v = i/10
+        ao.output(v)
+        time.sleep(0.01)
+    print("Finished voltage waveform!")
+    ao.output(0)
 
 #
 # The MIT License

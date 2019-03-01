@@ -1,0 +1,4 @@
+Wavelength = 561nm
+Peak intensity :12.39mW
+At amplitude :7023.0
+Gain = 255

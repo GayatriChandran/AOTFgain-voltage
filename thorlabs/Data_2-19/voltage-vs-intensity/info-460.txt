@@ -1,0 +1,4 @@
+Wavelength = 460nm
+Peak intensity :9.06mW
+At voltage :0.933V
+Gain = 255

@@ -1,0 +1,4 @@
+Wavelength = 561nm
+Peak intensity :12.47mW
+At voltage :0.88V
+Gain = 255

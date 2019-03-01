@@ -1,0 +1,4 @@
+Wavelength = 647nm
+Peak intensity :19.39mW
+At voltage :0.953V
+Gain = 255
